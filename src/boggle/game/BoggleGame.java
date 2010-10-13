@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
 import kutschke.higherClass.AbstractFun;
 import kutschke.higherClass.Lambda;
 
@@ -91,19 +92,18 @@ public class BoggleGame implements BoggleServer {
 		// setzen der Felder
 		for (int i = 0; i < field.length; i++)
 			for (int j = 0; j < field[i].length; j++) {
-				field[i][j] = BoggleRules.getChar(Math.random());
+				field[i][j] = Rules.getChar(Math.random());
 			}
 
 		if (timerThread != null)
-			timerThread.stop();
+			timerThread.interrupt();
 		timerThread = new Thread() {
 			public void run() {
 				while (getElapsedTime() < Rules.TimeLimit) {
 					try {
 						sleep(50);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						return;
 					}
 				}
 				evaluateAllClients();
@@ -111,7 +111,7 @@ public class BoggleGame implements BoggleServer {
 		};
 		timerThread.start();
 		for(BoggleClient c : clients)
-			c.notifyGameStart(field, Rules.TimeLimit);
+			c.notifyGameStart(Rules, field, Rules.TimeLimit);
 	}
 
 	public long getElapsedTime() {

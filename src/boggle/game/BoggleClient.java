@@ -7,5 +7,5 @@ public interface BoggleClient {
 
 	public Collection<String> getWordList();
 	public void notifyGameEnd(int score, Map<String,WordStatus> wordMap);
-	public void notifyGameStart(char[][] field, long timeLimit);
+	public void notifyGameStart(BoggleRules Rules, char[][] field, long timeLimit);
 }

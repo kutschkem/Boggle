@@ -119,7 +119,10 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 
 
 	@Override
-	public void notifyGameStart(char[][] field, long timeLimit) {
+	public void notifyGameStart(BoggleRules rules, char[][] field, long timeLimit) {
+		charPanel.setBoggleWidth(rules.boggleWidth);
+		charPanel.setBoggleHeight(rules.boggleHeight);
+		charPanel.initLabels();
 		try {
 			charPanel.setLabels(field);
 		} catch (BoggleRuleException e) {

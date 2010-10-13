@@ -25,7 +25,8 @@ public class BoggleCharPanel extends JPanel {
 		initLabels();
 	}
 
-	private void initLabels() {
+	public void initLabels() {
+		removeAll();
 		labels = new JLabel[boggleWidth * boggleHeight];
 		for (int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel();

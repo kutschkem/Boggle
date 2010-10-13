@@ -43,12 +43,12 @@ public class BoggleRules {
 		
 	}
 	
-	public static char  getChar(double randomnumber){
+	public char  getChar(double randomnumber){
 		char c='z' + 1;
 		for( c = 'a' -1 ; randomnumber >= 0.0;){
 			 c++;
 			if(c > 'z') break;
-			randomnumber -= STANDARD_PROBS.get(c); 
+			randomnumber -= probabilities.get(c); 
 		}
 		if(c >= 'a' && c <= 'z') return c;
 		throw new IllegalArgumentException("Random Number higher than 1.0!");
