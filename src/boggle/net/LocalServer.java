@@ -17,7 +17,7 @@ public class LocalServer {
 			public void run() {
 				try {
 					ServerSocket socket = new ServerSocket(8989);
-					while(true){
+					while(!Thread.interrupted()){
 						Socket s = socket.accept();
 						localServer.registerClient(
 								new RemoteClient(s,localServer));

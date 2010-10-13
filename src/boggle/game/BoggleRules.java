@@ -55,7 +55,7 @@ public class BoggleRules {
 	}
 
 	
-	public long TimeLimit = STANDARD_BOGGLE_TIMELIMIT;
+	public long timeLimit = STANDARD_BOGGLE_TIMELIMIT;
 	public int boggleWidth = STANDARD_BOGGLE_WIDTH;
 	public int boggleHeight = STANDARD_BOGGLE_HEIGHT;
 	public int minLetters = STANDARD_MIN_LETTERS;

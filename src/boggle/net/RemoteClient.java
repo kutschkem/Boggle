@@ -91,7 +91,7 @@ public class RemoteClient implements BoggleClient {
 			out.write(";");
 			out.write(String.valueOf(rules.minLetters));
 			out.write(";");
-			out.write(String.valueOf(rules.TimeLimit));
+			out.write(String.valueOf(rules.timeLimit));
 			out.write(";");
 			for(char[] c_arr : field){
 				for(char c : c_arr){

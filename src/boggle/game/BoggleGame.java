@@ -98,7 +98,7 @@ public class BoggleGame implements BoggleServer {
 			timerThread.interrupt();
 		timerThread = new Thread() {
 			public void run() {
-				while (getElapsedTime() < Rules.TimeLimit) {
+				while (getElapsedTime() < Rules.timeLimit) {
 					try {
 						sleep(50);
 					} catch (InterruptedException e) {
@@ -110,7 +110,7 @@ public class BoggleGame implements BoggleServer {
 		};
 		timerThread.start();
 		for (BoggleClient c : clients)
-			c.notifyGameStart(Rules, field, Rules.TimeLimit);
+			c.notifyGameStart(Rules, field, Rules.timeLimit);
 	}
 
 	public long getElapsedTime() {
@@ -128,7 +128,6 @@ public class BoggleGame implements BoggleServer {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void evaluateAllClients() {
 		final Collection<String>[] wordlists = new ArrayList[clients.size()];
 		for (int i = 0; i < clients.size(); i++) {
@@ -173,6 +172,7 @@ public class BoggleGame implements BoggleServer {
 	public void registerClient(BoggleClient cl) {
 		if (!clients.contains(cl))
 			clients.add(cl);
+		cl.notifyGameStart(Rules, getField(), Rules.timeLimit- getElapsedTime());
 
 	}
 

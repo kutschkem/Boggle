@@ -64,7 +64,7 @@ public class RemoteServer{
 		rules.boggleWidth = ((Number) processPart(in, TT_NUMBER)).intValue();
 		rules.boggleHeight = ((Number) processPart(in, TT_NUMBER)).intValue();
 		rules.minLetters = ((Number) processPart(in, TT_NUMBER)).intValue();
-		rules.TimeLimit = ((Number) processPart(in, TT_NUMBER)).longValue();
+		rules.timeLimit = ((Number) processPart(in, TT_NUMBER)).longValue();
 		
 		char[][] field = new char[rules.boggleWidth][rules.boggleHeight];
 		
