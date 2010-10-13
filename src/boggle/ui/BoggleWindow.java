@@ -1,6 +1,7 @@
 package boggle.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -10,11 +11,15 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SpringLayout;
+
 import boggle.game.BoggleClient;
 import boggle.game.BoggleGame;
 import boggle.game.BoggleRules;
 import boggle.game.Dictionary;
 import boggle.game.WordStatus;
+
+import static javax.swing.SpringLayout.*;
 
 @SuppressWarnings("serial")
 public class BoggleWindow extends JFrame implements BoggleClient {
@@ -25,6 +30,7 @@ public class BoggleWindow extends JFrame implements BoggleClient {
 			BoggleRules.STANDARD_BOGGLE_HEIGHT);
 	BoggleInputPanel inputPanel = new BoggleInputPanel();
 	BoggleStatusPanel statusPanel = new BoggleStatusPanel(this);
+	BoggleWordPanel wordPanel = new BoggleWordPanel();
 	private long maxtime = 0;
 	char[][] field;
 	Socket remoteSocket;
@@ -43,14 +49,19 @@ public class BoggleWindow extends JFrame implements BoggleClient {
 		BoggleWindow wnd = new BoggleWindow();
 		wnd.setVisible(true);
 
-		((BoggleGame) wnd.game).restart();
+		wnd.game.restart();
 	}
 
 	private void initComponents() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		getContentPane().add(charPanel, BorderLayout.CENTER);
-		getContentPane().add(inputPanel, BorderLayout.SOUTH);
-		getContentPane().add(statusPanel, BorderLayout.EAST);
+		getContentPane().add(charPanel);
+		getContentPane().add(inputPanel);
+		getContentPane().add(statusPanel);
+		getContentPane().add(wordPanel);
+		
+		initFormat();
+		
+		inputPanel.addObserver(wordPanel);
 
 		charPanel.addMouseListener(new MouseAdapter() {
 
@@ -76,6 +87,32 @@ public class BoggleWindow extends JFrame implements BoggleClient {
 			ex.printStackTrace();
 		}
 
+	}
+
+	private void initFormat() {
+		SpringLayout layout = new SpringLayout();
+		Container contentPane = getContentPane();
+		getContentPane().setLayout(layout);
+		
+		layout.putConstraint(NORTH, charPanel, 0, NORTH, contentPane);
+		layout.putConstraint(WEST, charPanel, 100, WEST, contentPane);
+		layout.putConstraint(EAST, contentPane, 70, EAST, charPanel);
+
+		layout.putConstraint(NORTH, inputPanel, 0, SOUTH, charPanel);
+		layout.putConstraint(WEST, inputPanel, 0, WEST, contentPane);
+		layout.putConstraint(EAST, inputPanel, 0, EAST, contentPane);
+		layout.putConstraint(SOUTH, contentPane, 0 , SOUTH, inputPanel);
+
+		layout.putConstraint(NORTH, statusPanel, 0, NORTH, contentPane);
+		layout.putConstraint(WEST, statusPanel, 0, EAST, charPanel);
+		layout.putConstraint(EAST, statusPanel, 0 , EAST, contentPane);
+		layout.putConstraint(SOUTH, statusPanel, 0 , NORTH, inputPanel);
+		
+		layout.putConstraint(NORTH, wordPanel, 0, NORTH, contentPane);
+		layout.putConstraint(WEST, wordPanel, 0, WEST, contentPane);
+		layout.putConstraint(EAST, wordPanel, 0, WEST, charPanel);
+		layout.putConstraint(SOUTH, wordPanel, 0, NORTH, inputPanel);
+		
 	}
 
 	@Override
