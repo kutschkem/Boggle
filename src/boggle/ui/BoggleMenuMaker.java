@@ -11,14 +11,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import boggle.net.LocalServer;
-import boggle.net.RemoteServer;
+import boggle.net.LocalBoggleServer;
+import boggle.net.RemoteBoggleServer;
 
 public final class BoggleMenuMaker {
 
 	private static final class MenuItemServer extends AbstractAction {
 		private final BoggleWindow parent;
-		static LocalServer serv;
+		static LocalBoggleServer serv;
 
 		private MenuItemServer(String name, BoggleWindow parent) {
 			super(name);
@@ -28,7 +28,7 @@ public final class BoggleMenuMaker {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (serv == null)
-				serv = new LocalServer(parent.game);
+				serv = new LocalBoggleServer(parent.game);
 
 		}
 	}
@@ -74,13 +74,14 @@ public final class BoggleMenuMaker {
 				try {
 					parent.remoteSocket = new Socket(IP, 8989);
 					parent.game.unregisterClient(parent);
-					new RemoteServer(parent.remoteSocket, parent);
+					new RemoteBoggleServer(parent.remoteSocket, parent);
 				} catch (UnknownHostException e) {
-					JOptionPane.showMessageDialog(parent,
-							"Ungültige IP-Adresse");
+					JOptionPane.showMessageDialog(parent, "Invalid IP-address",
+							"Connection failure", JOptionPane.ERROR_MESSAGE);
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(parent,
-							"Verbindung fehlgeschlagen");
+							"Unable to establish connection",
+							"Connection failure", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 

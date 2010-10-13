@@ -14,32 +14,32 @@ public class BoggleRules {
 	
 	static {
 		STANDARD_PROBS = new HashMap<Character, Double>();
-		STANDARD_PROBS.put('a', 9.0 / 96.0);
-		STANDARD_PROBS.put('b', 2.0 / 96.0);
-		STANDARD_PROBS.put('c', 2.0 / 96.0);
-		STANDARD_PROBS.put('d', 3.0 / 96.0);
-		STANDARD_PROBS.put('e', 13.0 / 96.0);
-		STANDARD_PROBS.put('f', 2.0 / 96.0);
-		STANDARD_PROBS.put('g', 2.0 / 96.0);
-		STANDARD_PROBS.put('h', 2.0 / 96.0);
-		STANDARD_PROBS.put('i', 8.0 / 96.0);
-		STANDARD_PROBS.put('j', 1.0 / 96.0);
-		STANDARD_PROBS.put('k', 1.0 / 96.0);
-		STANDARD_PROBS.put('l', 5.0 / 96.0);
-		STANDARD_PROBS.put('m', 3.0 / 96.0);
-		STANDARD_PROBS.put('n', 6.0 / 96.0);
-		STANDARD_PROBS.put('o', 6.0 / 96.0);
-		STANDARD_PROBS.put('p', 2.0 / 96.0);
-		STANDARD_PROBS.put('q', 1.0 / 96.0);
-		STANDARD_PROBS.put('r', 6.0 / 96.0);
-		STANDARD_PROBS.put('s', 6.0 / 96.0);
-		STANDARD_PROBS.put('t', 6.0 / 96.0);
-		STANDARD_PROBS.put('u', 4.0 / 96.0);
-		STANDARD_PROBS.put('v', 2.0 / 96.0);
-		STANDARD_PROBS.put('w', 1.0 / 96.0);
-		STANDARD_PROBS.put('x', 1.0 / 96.0);
-		STANDARD_PROBS.put('y', 1.0 / 96.0);
-		STANDARD_PROBS.put('z', 1.0 / 96.0);
+		STANDARD_PROBS.put('a', 9.0d / 96.0d);
+		STANDARD_PROBS.put('b', 2.0d / 96.0d);
+		STANDARD_PROBS.put('c', 2.0d / 96.0d);
+		STANDARD_PROBS.put('d', 3.0d / 96.0d);
+		STANDARD_PROBS.put('e', 13.0d / 96.0d);
+		STANDARD_PROBS.put('f', 2.0d / 96.0d);
+		STANDARD_PROBS.put('g', 2.0d / 96.0d);
+		STANDARD_PROBS.put('h', 2.0d / 96.0d);
+		STANDARD_PROBS.put('i', 8.0d / 96.0d);
+		STANDARD_PROBS.put('j', 1.0d / 96.0d);
+		STANDARD_PROBS.put('k', 1.0d / 96.0d);
+		STANDARD_PROBS.put('l', 5.0d / 96.0d);
+		STANDARD_PROBS.put('m', 3.0d / 96.0d);
+		STANDARD_PROBS.put('n', 6.0d / 96.0d);
+		STANDARD_PROBS.put('o', 6.0d / 96.0d);
+		STANDARD_PROBS.put('p', 2.0d / 96.0d);
+		STANDARD_PROBS.put('q', 1.0d / 96.0d);
+		STANDARD_PROBS.put('r', 6.0d / 96.0d);
+		STANDARD_PROBS.put('s', 6.0d / 96.0d);
+		STANDARD_PROBS.put('t', 6.0d / 96.0d);
+		STANDARD_PROBS.put('u', 4.0d / 96.0d);
+		STANDARD_PROBS.put('v', 2.0d / 96.0d);
+		STANDARD_PROBS.put('w', 1.0d / 96.0d);
+		STANDARD_PROBS.put('x', 1.0d / 96.0d);
+		STANDARD_PROBS.put('y', 1.0d / 96.0d);
+		STANDARD_PROBS.put('z', 1.0d / 96.0d);
 		
 	}
 	

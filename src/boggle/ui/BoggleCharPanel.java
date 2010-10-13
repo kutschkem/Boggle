@@ -40,7 +40,7 @@ public class BoggleCharPanel extends JPanel {
 
 	}
 
-	public void setLabels(char[][] newField) throws BoggleRuleException {
+	public void setLabels(char[][] newField) {
 		if (newField.length != boggleWidth
 				|| newField[0].length != boggleHeight)
 			throw new BoggleRuleException(

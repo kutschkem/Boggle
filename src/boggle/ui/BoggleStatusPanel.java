@@ -12,26 +12,26 @@ public class BoggleStatusPanel extends JPanel {
 	private long startTime;
 	private BoggleWindow parentWindow;
 	JLabel time = new JLabel();
-	Thread timerThread = new Thread(){			
+	Thread timerThread = new Thread(new Runnable(){			
 		@Override
 		public void run(){
 			while(true)
 		if(getElapsedTime() <= parentWindow.getMaxTime()){
 			try {
-				sleep(500);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Long el = (Long)(parentWindow.getMaxTime() - getElapsedTime())/1000;
-			time.setText("<html><div align =\"center\">Time:<br> "
+			time.setText("<html><div align =\"center\">Time:<br/> "
 					+(el / 60)+":"+ (el%60 < 10 ? "0" : "")
 					+(el%60)
 					+"</div></html>");
 		}
 	}
 		
-	};
+	}, "Timer thread");
 	
 	public BoggleStatusPanel(BoggleWindow parent){
 		parentWindow = parent;
@@ -48,7 +48,7 @@ public class BoggleStatusPanel extends JPanel {
 	}
 	
 	public long getElapsedTime(){
-		return startTime - System.currentTimeMillis();
+		return System.currentTimeMillis() - startTime;
 	}
 
 }

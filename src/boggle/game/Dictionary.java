@@ -43,6 +43,11 @@ public class Dictionary {
 		dictionary = new HashSet<String>();
 	}
 
+	/**
+	 * 
+	 * @param word
+	 * @return true if word is contained in the dictionary, false otherwise
+	 */
 	public boolean check(String word) {
 		word = word.toLowerCase();
 		boolean result = dictionary.contains(word);
@@ -51,9 +56,9 @@ public class Dictionary {
 			if (!result)
 				result = checkThroughWiki(toUppercase(word));
 			if (!result)
-				result = checkThroughWiki(Umlautersetzung(word));
+				result = checkThroughWiki(replaceUmlauts(word));
 			if (!result)
-				result = checkThroughWiki(toUppercase(Umlautersetzung(word)));
+				result = checkThroughWiki(toUppercase(replaceUmlauts(word)));
 			if (result)
 				addWord(word);
 		}
@@ -69,10 +74,13 @@ public class Dictionary {
 	public void load(String filename) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(filename),
 				256);
-		String str = null;
-		while ((str = reader.readLine()) != null)
-			addWord(str.trim());
-		reader.close();
+		try {
+			String str = null;
+			while ((str = reader.readLine()) != null)
+				addWord(str.trim());
+		} finally {
+			reader.close();
+		}
 	}
 
 	public void save(String filename) throws IOException {
@@ -96,13 +104,11 @@ public class Dictionary {
 	 * @param word
 	 * @return
 	 */
-	private boolean checkThroughWiki(String word) {
+	protected boolean checkThroughWiki(String word) {
 		URL url = null;
 		try {
 			url = new URL("http://de.wiktionary.org/wiki/" + word);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return false;
 		}
 		try {
@@ -124,7 +130,7 @@ public class Dictionary {
 	 * @param str
 	 * @return
 	 */
-	private String toUppercase(String str) {
+	protected String toUppercase(String str) {
 		return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 
@@ -134,7 +140,7 @@ public class Dictionary {
 	 * @param str
 	 * @return
 	 */
-	private String Umlautersetzung(String str) {
+	protected String replaceUmlauts(String str) {
 		String help = str.replace("ae", "ä");
 		help = help.replace("Ae", "Ä");
 		help = help.replace("oe", "ö");

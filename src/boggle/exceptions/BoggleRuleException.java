@@ -6,7 +6,7 @@ package boggle.exceptions;
  *
  */
 @SuppressWarnings("serial")
-public class BoggleRuleException extends Exception {
+public class BoggleRuleException extends RuntimeException {
 
 	public BoggleRuleException() {
 	}
