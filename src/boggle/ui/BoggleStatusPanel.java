@@ -9,20 +9,21 @@ import javax.swing.SwingConstants;
 @SuppressWarnings("serial")
 public class BoggleStatusPanel extends JPanel {
 	
+	private long startTime;
 	private BoggleWindow parentWindow;
 	JLabel time = new JLabel();
 	Thread timerThread = new Thread(){			
 		@Override
 		public void run(){
 			while(true)
-		if(parentWindow.game.getElapsedTime() <= parentWindow.getMaxTime()){
+		if(getElapsedTime() <= parentWindow.getMaxTime()){
 			try {
 				sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Long el = (Long)(parentWindow.getMaxTime() - parentWindow.game.getElapsedTime())/1000;
+			Long el = (Long)(parentWindow.getMaxTime() - getElapsedTime())/1000;
 			time.setText("<html><div align =\"center\">Time:<br> "
 					+(el / 60)+":"+ (el%60 < 10 ? "0" : "")
 					+(el%60)
@@ -40,6 +41,14 @@ public class BoggleStatusPanel extends JPanel {
 		timerThread.setDaemon(true);
 		timerThread.start();
 
+	}
+	
+	public void updateStartTime(){
+		startTime = System.currentTimeMillis();
+	}
+	
+	public long getElapsedTime(){
+		return startTime - System.currentTimeMillis();
 	}
 
 }

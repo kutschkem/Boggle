@@ -17,9 +17,10 @@ public class BoggleTest {
 	
 	@Test
 	public void testRandomness(){
-		assertEquals('a', BoggleRules.getChar(0.0));
-		assertEquals('b', BoggleRules.getChar(10.0 / 96.0));
-		assertEquals('z', BoggleRules.getChar(1.0));
+		BoggleRules rules = new BoggleRules();
+		assertEquals('a', rules.getChar(0.0));
+		assertEquals('b', rules.getChar(10.0 / 96.0));
+		assertEquals('z', rules.getChar(1.0));
 	}
 	
 	@Test
@@ -42,9 +43,9 @@ public class BoggleTest {
 		assertEquals(true, dic.check("Abdikation"));
 		assertEquals(true, dic.check("abdikation"));
 		assertEquals(false, dic.check("grradsdds"));
-		assertEquals(true,dic.check("Äpfel"));
+		assertEquals(true,dic.check("ï¿½pfel"));
 		assertEquals(true, dic.check("Aepfel"));
-		assertEquals(true, dic.check("öse"));		
+		assertEquals(true, dic.check("ï¿½se"));		
 	}
 	
 	@Test

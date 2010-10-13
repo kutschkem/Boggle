@@ -21,7 +21,7 @@ public class BoggleGame implements BoggleServer {
 	private Thread timerThread = null;
 
 	protected ArrayList<BoggleClient> clients = new ArrayList<BoggleClient>();
-	
+
 	BoggleRules Rules = new BoggleRules();
 
 	public char[][] getField() {
@@ -45,8 +45,7 @@ public class BoggleGame implements BoggleServer {
 				if (field[i][j] == word[0])
 					positions.add(new Point(i, j));
 			}
-		return checkSequenceList(word, 0, positions,
-				new LinkedList<Point>());
+		return checkSequenceList(word, 0, positions, new LinkedList<Point>());
 	}
 
 	private boolean checkSequenceList(char[] sequence, int index,
@@ -64,8 +63,8 @@ public class BoggleGame implements BoggleServer {
 			if (index == sequence.length - 1)
 				return true;
 			visited.add(p);
-			boolean check = checkSequenceList(sequence, index + 1,
-					Arrays.asList(createNeighbourArray(p)), visited);
+			boolean check = checkSequenceList(sequence, index + 1, Arrays
+					.asList(createNeighbourArray(p)), visited);
 			if (check)
 				return true;
 			visited.remove(p);
@@ -110,7 +109,7 @@ public class BoggleGame implements BoggleServer {
 			}
 		};
 		timerThread.start();
-		for(BoggleClient c : clients)
+		for (BoggleClient c : clients)
 			c.notifyGameStart(Rules, field, Rules.TimeLimit);
 	}
 
@@ -135,28 +134,26 @@ public class BoggleGame implements BoggleServer {
 		for (int i = 0; i < clients.size(); i++) {
 			wordlists[i] = new ArrayList<String>();
 			Collection<String> helpStrCol = clients.get(i).getWordList();
-			synchronized(helpStrCol){
-			wordlists[i].addAll(helpStrCol);
+			synchronized (helpStrCol) {
+				wordlists[i].addAll(helpStrCol);
 			}
 		}
 
 		for (int i = 0; i < clients.size(); i++) {
 			final Map<String, WordStatus> wordMap = new HashMap<String, WordStatus>();
-			for(String str : wordlists[i]){
+			for (String str : wordlists[i]) {
 				WordStatus status = WordStatus.ACCEPTED;
 				for (int j = 0; j < clients.size(); j++) {
 					if (j != i)
-						if (wordlists[i].contains(str))
+						if (wordlists[j].contains(str))
 							status = WordStatus.DOUBLE;
 				}
-				if(! checkPossibleWord(str))
+				if (!checkPossibleWord(str))
 					status = WordStatus.IMPOSSIBLE_WORD;
-				else
-				if(blacklist.check(str))
+				else if (blacklist.check(str))
 					status = WordStatus.ON_BLACKLIST;
-				else
-					if(! checkDictionary(str))
-						status = WordStatus.UNKNOWN;
+				else if (!checkDictionary(str))
+					status = WordStatus.UNKNOWN;
 				wordMap.put(str, status);
 			}
 			Collection<String> words = AbstractFun.filter(wordlists[i],
@@ -174,7 +171,8 @@ public class BoggleGame implements BoggleServer {
 
 	@Override
 	public void registerClient(BoggleClient cl) {
-		clients.add(cl);
+		if (!clients.contains(cl))
+			clients.add(cl);
 
 	}
 

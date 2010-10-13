@@ -1,9 +1,10 @@
 package boggle.ui;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.Collection;
 import java.util.Map;
 
@@ -23,6 +24,8 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 	BoggleInputPanel inputPanel = new BoggleInputPanel();
 	BoggleStatusPanel statusPanel = new BoggleStatusPanel(this);
 	private long maxtime = 0;
+	char[][] field;
+	Socket remoteSocket;
 	
 	String dictFileName = "deutsch";
 
@@ -40,7 +43,7 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 		BoggleWindow wnd = new BoggleWindow();
 		wnd.setVisible(true);
 
-		wnd.game.restart();
+		((BoggleGame) wnd.game).restart();
 	}
 	
 	private void initComponents(){
@@ -49,39 +52,15 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 		getContentPane().add(inputPanel,BorderLayout.SOUTH);
 		getContentPane().add(statusPanel, BorderLayout.EAST);
 		
-		charPanel.addMouseListener(new MouseListener(){
+		charPanel.addMouseListener(new MouseAdapter(){
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int x = e.getX() / BoggleCharPanel.charPanelSize;
 				int y = e.getY() / BoggleCharPanel.charPanelSize;
-				inputPanel.setText(inputPanel.getText() + game.getField()[y][x]);
+				inputPanel.setText(inputPanel.getText() + field[y][x]);
 			}
 
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
 		});
 		
 		this.setJMenuBar(BoggleMenuMaker.createMenu(this));
@@ -107,6 +86,7 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 	@Override
 	public void notifyGameEnd(int score, Map<String, WordStatus> wordMap) {
 		JOptionPane.showMessageDialog(this, "Sie haben " + score + " Punkte erreicht", "Spielende", JOptionPane.PLAIN_MESSAGE);
+		if(game instanceof BoggleGame)
 		try {
 			game.dictionary.save(dictFileName + ".dic");
 			game.blacklist.save(dictFileName + ".blk");
@@ -120,6 +100,7 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 
 	@Override
 	public void notifyGameStart(BoggleRules rules, char[][] field, long timeLimit) {
+		this.field = field;
 		charPanel.setBoggleWidth(rules.boggleWidth);
 		charPanel.setBoggleHeight(rules.boggleHeight);
 		charPanel.initLabels();
@@ -131,6 +112,7 @@ public class BoggleWindow extends JFrame implements BoggleClient{
 		}
 		inputPanel.getWords().clear();
 		maxtime = timeLimit;
+		statusPanel.updateStartTime();
 	}
 
 	public long getMaxTime(){
