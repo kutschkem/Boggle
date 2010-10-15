@@ -1,17 +1,18 @@
 package boggle.net;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StreamTokenizer;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import static java.io.StreamTokenizer.*;
-
+import kutschke.higherClass.BindableReflectiveFun;
+import kutschke.interpreter.LispStyleInterpreter;
+import kutschke.interpreter.Parser;
+import kutschke.interpreter.SyntaxException;
 import boggle.game.BoggleClient;
 import boggle.game.BoggleRules;
 import boggle.game.WordStatus;
@@ -29,21 +30,37 @@ public class RemoteBoggleServer {
 			@Override
 			public void run() {
 				try {
-					StreamTokenizer in = new StreamTokenizer(
-							new BufferedReader(new InputStreamReader(
+					LispStyleInterpreter interpreter = new LispStyleInterpreter();
+					Class<?> clazz = RemoteBoggleServer.class;
+					Object t_this = RemoteBoggleServer.this;
+					interpreter.addMethod("GET", 
+							new BindableReflectiveFun<Void>(
+									"processGet", 
+									clazz, 
+									new Class<?>[]{}).setBound(t_this));
+					interpreter.addMethod("End", new BindableReflectiveFun<Void>(
+							"processEnd", clazz, new Class<?>[]{Number.class,String[].class} )
+							.setBound(t_this));
+					interpreter.addMethod("Start", new BindableReflectiveFun<Void>(
+							"processStart",clazz,new Class<?>[]
+						{Number.class,Number.class,Number.class,Number.class,Number.class,String[].class})
+						.setBound(t_this));
+					interpreter.setDEBUG(true);
+					Parser parser = new Parser();
+					parser.setInterpreter(interpreter);
+					parser.parse(
 									RemoteBoggleServer.this.socket
-											.getInputStream())));
-					in.parseNumbers();
-					while (in.nextToken() == '[') {
-						in.nextToken();
-						if (in.sval.equals("Start"))
-							processStart(in);
-						else if (in.sval.equals("GET"))
-							processGET(in);
-						else if (in.sval.equals("End"))
-							processEnd(in);
-					}
-				} catch (IOException e) {
+											.getInputStream());
+					} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -55,75 +72,52 @@ public class RemoteBoggleServer {
 		readingThread.start();
 	}
 
-	public void processStart(StreamTokenizer in) throws IOException {
+	public void processStart(Number width, Number height, 
+			Number minLetters, Number timeLimit, Number remaining, String... field) throws IOException {
 		BoggleRules rules = new BoggleRules();
 
-		rules.boggleWidth = ((Number) processPart(in, TT_NUMBER)).intValue();
-		rules.boggleHeight = ((Number) processPart(in, TT_NUMBER)).intValue();
-		rules.minLetters = ((Number) processPart(in, TT_NUMBER)).intValue();
-		rules.timeLimit = ((Number) processPart(in, TT_NUMBER)).longValue();
+		rules.boggleWidth = width.intValue();
+		rules.boggleHeight = height.intValue();
+		rules.minLetters = minLetters.intValue();
+		rules.timeLimit = timeLimit.longValue();
 
-		char[][] field = new char[rules.boggleWidth][rules.boggleHeight];
+		char[][] field_arr = new char[rules.boggleWidth][rules.boggleHeight];
 
-		for (int i = 0; i < field.length; i++) {
-			for (int j = 0; j < field[0].length; j++) {
-				field[i][j] = ((String) processPart(in, TT_WORD)).charAt(0);
+		for (int i = 0; i < field_arr.length; i++) {
+			for (int j = 0; j < field_arr[0].length; j++) {
+				field_arr[i][j] = (field[i*field_arr[0].length + j]).charAt(0);
 			}
 		}
 
-		long timelimit = ((Number) processPart(in, TT_NUMBER)).longValue();
-		if (in.nextToken() != ']')
-			throw new IOException("unexpected end of message");
-		client.notifyGameStart(rules, field, timelimit);
+		long timelimit = remaining.longValue();
+		client.notifyGameStart(rules, field_arr, timelimit);
 
 	}
 
-	private Object processPart(StreamTokenizer in, int ttNumber)
-			throws IOException {
-		while (in.nextToken() != TT_EOF) {
-			if (in.ttype == ttNumber) {
-				System.out.println(in.sval);
-				switch (in.ttype) {
-				case TT_NUMBER:
-					return in.nval;
-				case TT_WORD:
-					return in.sval;
-				}
-			}
-		}
-		throw new IOException("Unexpected end of Stream");
-	}
-
-	public void processGET(StreamTokenizer in) throws IOException {
-		if (in.nextToken() != ']')
-			throw new IOException("unexpected end of Message");
+	public void processGet() throws IOException {
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket
 				.getOutputStream()));
-		out.write("{");
+		out.write("(");
 		for (String word : client.getWordList()) {
 			out.write(word);
 			out.write(" ");
 		}
-		out.write("}");
+		out.write(")\n");
 		out.flush();
-
 	}
 
-	public void processEnd(StreamTokenizer in) throws IOException {
-		int score = ((Number) processPart(in, TT_NUMBER)).intValue();
+	public void processEnd(Number score, String... args) throws IOException {
+		int t_score = score.intValue();
 		Map<String, WordStatus> wordmap = new HashMap<String, WordStatus>();
 
-		while (in.nextToken() != ']') {
-			String word = (String) processPart(in, TT_WORD);
+		Iterator<String> it = Arrays.asList(args).iterator();
+		while (it.hasNext()) {
+			String word = it.next();
 			WordStatus stat = Enum.valueOf(WordStatus.class,
-					(String) processPart(in, TT_WORD));
-			if (in.nextToken() != '>')
-				throw new IOException("Malformed Request");
-			if (in.nextToken() != ';')
-				throw new IOException("Malformed Request");
+					it.next());
 			wordmap.put(word, stat);
 		}
-		client.notifyGameEnd(score, wordmap);
+		client.notifyGameEnd(t_score, wordmap);
 	}
 
 }

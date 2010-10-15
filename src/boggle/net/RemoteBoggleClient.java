@@ -34,12 +34,10 @@ public class RemoteBoggleClient implements BoggleClient {
 		List<String> words = new ArrayList<String>();
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			out.write("[GET]");
+			out.write("(GET)\n");
 			out.flush();
 			StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-			in.ordinaryChar('{');
-			in.ordinaryChar('}');
-			if(in.nextToken() != '{')
+			if(in.nextToken() != '(')
 				throw new IOException("wrong start of message");
 			
 	Loop:	while(in.nextToken() != TT_EOF){
@@ -47,7 +45,7 @@ public class RemoteBoggleClient implements BoggleClient {
 				case TT_WORD:
 					words.add(in.sval);
 					break;
-				case '}':
+				case ')':
 					break Loop;
 					
 				}
@@ -62,17 +60,17 @@ public class RemoteBoggleClient implements BoggleClient {
 	public void notifyGameEnd(int score, Map<String, WordStatus> wordMap) {
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			out.write("[End;");
+			out.write("(End ");
 			out.write(String.valueOf(score));
-			out.write(";");
+			out.write(" ");
 			for(Entry<String,WordStatus> e : wordMap.entrySet()){
-				out.write("<");
+				out.write(" ");
 				out.write(e.getKey());
-				out.write(",");
+				out.write(" ");
 				out.write(e.getValue().toString());
-				out.write(">;");
+				out.write(" ");
 			}
-			out.write("]");
+			out.write(")\n");
 			out.flush();
 		} catch (IOException e) {
 			endConnection();
@@ -84,23 +82,25 @@ public class RemoteBoggleClient implements BoggleClient {
 	public void notifyGameStart(BoggleRules rules, char[][] field, long timeLimit) {
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			out.write("[Start;");
+			out.write("(Start ");
 			out.write(String.valueOf(rules.boggleWidth));
-			out.write(";");
+			out.write(" ");
 			out.write(String.valueOf(rules.boggleHeight));
-			out.write(";");
+			out.write(" ");
 			out.write(String.valueOf(rules.minLetters));
-			out.write(";");
+			out.write(" ");
 			out.write(String.valueOf(rules.timeLimit));
-			out.write(";");
+			out.write(" ");
+			out.write(String.valueOf(timeLimit));
+			out.write(" ");
 			for(char[] c_arr : field){
 				for(char c : c_arr){
 					out.write(c);
-					out.write(";");
+					out.write(" ");
 				}
 			}
-			out.write(String.valueOf(timeLimit));
-			out.write("]");
+
+			out.write(")\n");
 			out.flush();			
 		}catch(IOException e){
 			endConnection();
