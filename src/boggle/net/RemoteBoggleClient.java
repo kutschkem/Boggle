@@ -7,14 +7,11 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import kutschke.higherClass.BindableReflectiveFun;
-import kutschke.higherClass.NoThrowLambda;
 import kutschke.higherClass.ReflectiveFun;
 import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
