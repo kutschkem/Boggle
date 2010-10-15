@@ -1,19 +1,24 @@
 package boggle.net;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StreamTokenizer;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import static java.io.StreamTokenizer.*;
 
+import kutschke.higherClass.BindableReflectiveFun;
+import kutschke.higherClass.NoThrowLambda;
+import kutschke.higherClass.ReflectiveFun;
+import kutschke.interpreter.LispStyleInterpreter;
+import kutschke.interpreter.Parser;
+import kutschke.interpreter.SyntaxException;
 import boggle.game.BoggleClient;
 import boggle.game.BoggleRules;
 import boggle.game.BoggleServer;
@@ -31,27 +36,32 @@ public class RemoteBoggleClient implements BoggleClient {
 
 	@Override
 	public Collection<String> getWordList() {
-		List<String> words = new ArrayList<String>();
+		final List<String> words = new ArrayList<String>();
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			out.write("(GET)\n");
 			out.flush();
-			StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-			if(in.nextToken() != '(')
-				throw new IOException("wrong start of message");
-			
-	Loop:	while(in.nextToken() != TT_EOF){
-				switch(in.ttype){
-				case TT_WORD:
-					words.add(in.sval);
-					break;
-				case ')':
-					break Loop;
-					
-				}
-			}
-		} catch (IOException e) {
+			LispStyleInterpreter interpreter = new LispStyleInterpreter();
+			interpreter.addMethod("list", new ReflectiveFun<List<String>>("asList",Arrays.class,new Class<?>[]{Object[].class}));
+			interpreter.addMethod("WORDS", new BindableReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
+					.setBound(words));
+			interpreter.setDEBUG(true);
+			Parser parser = new Parser();
+			parser.setGreedy(false);
+			parser.setInterpreter(interpreter);
+			parser.parse(socket.getInputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
 			endConnection();
+		} catch (SyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return words;
 	}

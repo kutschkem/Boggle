@@ -3,6 +3,8 @@ package boggle.net;
 import java.io.IOException;
 
 import boggle.game.BoggleGame;
+import boggle.game.BoggleRules;
+import boggle.game.Dictionary;
 
 public class DedicatedServer {
 
@@ -17,11 +19,21 @@ public class DedicatedServer {
 			@Override
 			public void run() {
 				while(true){
-					server.game.restart();
-					try {
-						Thread.sleep(210000);
+					BoggleRules rules = new BoggleRules();
+					rules.timeLimit = 30000;
+					server.game.setRules(rules);
+						Dictionary dictionary = new Dictionary(false);
+						try {
+						dictionary.load("deutsch.dic");
+						server.game.setDictionary(dictionary);
+						server.game.blacklist.load("deutsch.blk");
+						server.game.restart();
+
+						Thread.sleep(120000);
 					} catch (InterruptedException e) {
 						break;
+					} catch(IOException e){
+						e.printStackTrace();
 					}
 				}
 			}
