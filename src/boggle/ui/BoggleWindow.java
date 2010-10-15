@@ -1,6 +1,10 @@
 package boggle.ui;
 
-import java.awt.BorderLayout;
+import static javax.swing.SpringLayout.EAST;
+import static javax.swing.SpringLayout.NORTH;
+import static javax.swing.SpringLayout.SOUTH;
+import static javax.swing.SpringLayout.WEST;
+
 import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,8 +22,6 @@ import boggle.game.BoggleGame;
 import boggle.game.BoggleRules;
 import boggle.game.Dictionary;
 import boggle.game.WordStatus;
-
-import static javax.swing.SpringLayout.*;
 
 @SuppressWarnings("serial")
 public class BoggleWindow extends JFrame implements BoggleClient {

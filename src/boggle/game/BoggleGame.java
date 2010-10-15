@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import kutschke.higherClass.AbstractFun;
-import kutschke.higherClass.Lambda;
+import kutschke.higherClass.NoThrowLambda;
 
 public class BoggleGame implements BoggleServer {
 
@@ -207,7 +207,7 @@ public class BoggleGame implements BoggleServer {
 				wordMap.put(str, status);
 			}
 			Collection<String> words = AbstractFun.filter(wordlists[i],
-					new Lambda<String, Boolean>() {
+					new NoThrowLambda<String, Boolean>() {
 
 						@Override
 						public Boolean apply(String arg) {
