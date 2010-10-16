@@ -147,6 +147,7 @@ public class BoggleWindow extends JFrame implements BoggleClient {
 		inputPanel.getWords().clear();
 		maxtime = timeLimit;
 		statusPanel.updateStartTime();
+		wordPanel.clear();
 	}
 
 	public long getMaxTime() {

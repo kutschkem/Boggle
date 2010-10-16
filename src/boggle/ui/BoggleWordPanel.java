@@ -1,6 +1,5 @@
 package boggle.ui;
 
-import interfaces.Observable;
 import interfaces.Observer;
 
 import java.awt.GridLayout;
@@ -23,11 +22,12 @@ public class BoggleWordPanel extends JPanel implements Observer<String> {
 	}
 	
 	@Override
-	public void update(Observable<String> observable, String arg) {
-		if(arg == null)
-			model.clear();
-		else
+	public void update(String arg) {
 			model.addElement(arg);
+	}
+	
+	public void clear(){
+		model.clear();
 	}
 
 }

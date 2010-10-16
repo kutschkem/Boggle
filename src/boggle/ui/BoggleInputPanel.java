@@ -1,6 +1,5 @@
 package boggle.ui;
 
-import interfaces.Observable;
 import interfaces.Observer;
 
 import java.awt.BorderLayout;
@@ -19,8 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class BoggleInputPanel extends JPanel implements ActionListener,
-Observable<String>{
+public class BoggleInputPanel extends JPanel implements ActionListener{
 
 	private JTextField textField;
 	private JButton checkBtn;
@@ -49,7 +47,7 @@ Observable<String>{
 	public void actionPerformed(ActionEvent e) {
 		words.add(textField.getText());
 		for(Observer<String> ob : observers)
-			ob.update(this, textField.getText());
+			ob.update(textField.getText());
 		textField.setText(null);
 	}
 
@@ -65,13 +63,11 @@ Observable<String>{
 		textField.setText(text);
 	}
 
-	@Override
 	public void addObserver(Observer<String> observer) {
 		observers.add(observer);
 		
 	}
 
-	@Override
 	public void deleteObserver(Observer<String> observer) {
 		observers.remove(observer);
 		

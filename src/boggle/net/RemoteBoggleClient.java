@@ -1,8 +1,10 @@
 package boggle.net;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import kutschke.higherClass.ReflectiveFun;
 import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
 import kutschke.interpreter.SyntaxException;
+import kutschke.utility.CharFilterStream;
 import boggle.game.BoggleClient;
 import boggle.game.BoggleRules;
 import boggle.game.BoggleServer;
@@ -65,7 +68,7 @@ public class RemoteBoggleClient implements BoggleClient {
 	@Override
 	public void notifyGameEnd(int score, Map<String, WordStatus> wordMap) {
 		try {
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			Writer out = new OutputStreamWriter(new CharFilterStream(new BufferedOutputStream(socket.getOutputStream())));
 			out.write("(End ");
 			out.write(String.valueOf(score));
 			out.write(" ");
@@ -87,7 +90,7 @@ public class RemoteBoggleClient implements BoggleClient {
 	@Override
 	public void notifyGameStart(BoggleRules rules, char[][] field, long timeLimit) {
 		try {
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			Writer out = new OutputStreamWriter(new CharFilterStream(new BufferedOutputStream(socket.getOutputStream())));
 			out.write("(Start ");
 			out.write(String.valueOf(rules.boggleWidth));
 			out.write(" ");
