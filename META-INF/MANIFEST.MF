@@ -8,3 +8,4 @@ Export-Package: boggle.exceptions,
  boggle.tests,
  boggle.ui
 Require-Bundle: Utility;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

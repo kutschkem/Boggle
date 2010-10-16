@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import kutschke.higherClass.BindableReflectiveFun;
 import kutschke.higherClass.ReflectiveFun;
 import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
@@ -40,7 +39,7 @@ public class RemoteBoggleClient implements BoggleClient {
 			out.flush();
 			LispStyleInterpreter interpreter = new LispStyleInterpreter();
 			interpreter.addMethod("list", new ReflectiveFun<List<String>>("asList",Arrays.class,new Class<?>[]{Object[].class}));
-			interpreter.addMethod("WORDS", new BindableReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
+			interpreter.addMethod("WORDS", new ReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
 					.setBound(words));
 			interpreter.setDEBUG(true);
 			Parser parser = new Parser();

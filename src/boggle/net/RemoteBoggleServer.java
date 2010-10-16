@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import kutschke.higherClass.BindableReflectiveFun;
+import kutschke.higherClass.ReflectiveFun;
 import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
 import kutschke.interpreter.SyntaxException;
@@ -34,14 +34,14 @@ public class RemoteBoggleServer {
 					Class<?> clazz = RemoteBoggleServer.class;
 					Object t_this = RemoteBoggleServer.this;
 					interpreter.addMethod("GET", 
-							new BindableReflectiveFun<Void>(
+							new ReflectiveFun<Void>(
 									"processGet", 
 									clazz, 
 									new Class<?>[]{}).setBound(t_this));
-					interpreter.addMethod("End", new BindableReflectiveFun<Void>(
+					interpreter.addMethod("End", new ReflectiveFun<Void>(
 							"processEnd", clazz, new Class<?>[]{Number.class,String[].class} )
 							.setBound(t_this));
-					interpreter.addMethod("Start", new BindableReflectiveFun<Void>(
+					interpreter.addMethod("Start", new ReflectiveFun<Void>(
 							"processStart",clazz,new Class<?>[]
 						{Number.class,Number.class,Number.class,Number.class,Number.class,String[].class})
 						.setBound(t_this));
