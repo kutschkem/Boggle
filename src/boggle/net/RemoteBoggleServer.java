@@ -46,7 +46,7 @@ public class RemoteBoggleServer {
 						{Number.class,Number.class,Number.class,Number.class,Number.class,String[].class})
 						.setBound(t_this));
 					interpreter.setDEBUG(true);
-					Parser parser = new Parser();
+					Parser parser = Parser.standardParser();
 					parser.setInterpreter(interpreter);
 					parser.parse(
 									RemoteBoggleServer.this.socket

@@ -45,7 +45,7 @@ public class RemoteBoggleClient implements BoggleClient {
 			interpreter.addMethod("WORDS", new ReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
 					.setBound(words));
 			interpreter.setDEBUG(true);
-			Parser parser = new Parser();
+			Parser parser = Parser.standardParser();
 			parser.setGreedy(false);
 			parser.setInterpreter(interpreter);
 			parser.parse(socket.getInputStream());
