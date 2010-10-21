@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import kutschke.higherClass.ReflectiveFun;
-import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
+import kutschke.interpreter.SimpleInterpreter;
 import kutschke.interpreter.SyntaxException;
 import kutschke.utility.CharFilterStream;
 import boggle.game.BoggleClient;
@@ -40,7 +40,7 @@ public class RemoteBoggleClient implements BoggleClient {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			out.write("(GET)\n");
 			out.flush();
-			LispStyleInterpreter interpreter = new LispStyleInterpreter();
+			SimpleInterpreter interpreter = new SimpleInterpreter();
 			interpreter.addMethod("list", new ReflectiveFun<List<String>>("asList",Arrays.class,new Class<?>[]{Object[].class}));
 			interpreter.addMethod("WORDS", new ReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
 					.setBound(words));

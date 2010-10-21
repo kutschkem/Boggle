@@ -10,8 +10,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import kutschke.higherClass.ReflectiveFun;
-import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
+import kutschke.interpreter.SimpleInterpreter;
 import kutschke.interpreter.SyntaxException;
 import boggle.game.BoggleClient;
 import boggle.game.BoggleRules;
@@ -30,7 +30,7 @@ public class RemoteBoggleServer {
 			@Override
 			public void run() {
 				try {
-					LispStyleInterpreter interpreter = new LispStyleInterpreter();
+					SimpleInterpreter interpreter = new SimpleInterpreter();
 					Class<?> clazz = RemoteBoggleServer.class;
 					Object t_this = RemoteBoggleServer.this;
 					interpreter.addMethod("GET", 
