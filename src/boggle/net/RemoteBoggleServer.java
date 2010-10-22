@@ -1,7 +1,9 @@
 package boggle.net;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Arrays;
@@ -10,8 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import kutschke.higherClass.ReflectiveFun;
+import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
-import kutschke.interpreter.SimpleInterpreter;
 import kutschke.interpreter.SyntaxException;
 import boggle.game.BoggleClient;
 import boggle.game.BoggleRules;
@@ -30,7 +32,7 @@ public class RemoteBoggleServer {
 			@Override
 			public void run() {
 				try {
-					SimpleInterpreter interpreter = new SimpleInterpreter();
+					LispStyleInterpreter interpreter = new LispStyleInterpreter();
 					Class<?> clazz = RemoteBoggleServer.class;
 					Object t_this = RemoteBoggleServer.this;
 					interpreter.addMethod("GET", 
@@ -48,9 +50,9 @@ public class RemoteBoggleServer {
 					interpreter.setDEBUG(true);
 					Parser parser = Parser.standardParser();
 					parser.setInterpreter(interpreter);
-					parser.parse(
+					parser.parse( new InputStreamReader(new BufferedInputStream(
 									RemoteBoggleServer.this.socket
-											.getInputStream());
+											.getInputStream())));
 					} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

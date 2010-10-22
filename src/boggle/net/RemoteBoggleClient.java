@@ -1,8 +1,10 @@
 package boggle.net;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
@@ -14,8 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import kutschke.higherClass.ReflectiveFun;
+import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
-import kutschke.interpreter.SimpleInterpreter;
 import kutschke.interpreter.SyntaxException;
 import kutschke.utility.CharFilterStream;
 import boggle.game.BoggleClient;
@@ -40,7 +42,7 @@ public class RemoteBoggleClient implements BoggleClient {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			out.write("(GET)\n");
 			out.flush();
-			SimpleInterpreter interpreter = new SimpleInterpreter();
+			LispStyleInterpreter interpreter = new LispStyleInterpreter();
 			interpreter.addMethod("list", new ReflectiveFun<List<String>>("asList",Arrays.class,new Class<?>[]{Object[].class}));
 			interpreter.addMethod("WORDS", new ReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
 					.setBound(words));
@@ -48,7 +50,7 @@ public class RemoteBoggleClient implements BoggleClient {
 			Parser parser = Parser.standardParser();
 			parser.setGreedy(false);
 			parser.setInterpreter(interpreter);
-			parser.parse(socket.getInputStream());
+			parser.parse(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			endConnection();
