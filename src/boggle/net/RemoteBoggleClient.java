@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import kutschke.generalStreams.InStream;
 import kutschke.higherClass.ReflectiveFun;
 import kutschke.interpreter.LispStyleInterpreter;
 import kutschke.interpreter.Parser;
-import kutschke.interpreter.SyntaxException;
 import kutschke.utility.CharFilterStream;
 import boggle.game.BoggleClient;
 import boggle.game.BoggleRules;
@@ -29,39 +29,40 @@ public class RemoteBoggleClient implements BoggleClient {
 	
 	private Socket socket;
 	private BoggleServer server;
+	InStream<Object> parsingStream;
 	
-	public RemoteBoggleClient(Socket socket, BoggleServer server){
+	public RemoteBoggleClient(Socket socket, BoggleServer server) throws IOException{
 		this.socket = socket;
 		this.server = server;
+		LispStyleInterpreter interpreter = new LispStyleInterpreter();
+		try {
+			interpreter.addMethod("WORDS", new ReflectiveFun<List<String>>("asList",Arrays.class,new Class<?>[]{Object[].class}));
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}
+		interpreter.setDEBUG(true);
+		Parser parser = Parser.standardParser();
+		parser.setInterpreter(interpreter);
+		parsingStream = parser.stream(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
+
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<String> getWordList() {
-		final List<String> words = new ArrayList<String>();
+		List<String> words = new ArrayList<String>();
 		try {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			out.write("(GET)\n");
 			out.flush();
-			LispStyleInterpreter interpreter = new LispStyleInterpreter();
-			interpreter.addMethod("list", new ReflectiveFun<List<String>>("asList",Arrays.class,new Class<?>[]{Object[].class}));
-			interpreter.addMethod("WORDS", new ReflectiveFun<Void>("addAll",words.getClass(),new Class<?>[]{Collection.class})
-					.setBound(words));
-			interpreter.setDEBUG(true);
-			Parser parser = Parser.standardParser();
-			parser.setGreedy(false);
-			parser.setInterpreter(interpreter);
-			parser.parse(new InputStreamReader(new BufferedInputStream(socket.getInputStream())));
+			words.clear();
+			words.addAll((Collection<? extends String>) parsingStream.read());
 			} catch (IOException e) {
 				e.printStackTrace();
 			endConnection();
-		} catch (SyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
+		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 		return words;

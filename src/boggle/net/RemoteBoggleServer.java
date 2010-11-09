@@ -99,12 +99,12 @@ public class RemoteBoggleServer {
 	public void processGet() throws IOException {
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket
 				.getOutputStream()));
-		out.write("(WORDS (list ");
+		out.write("(WORDS ");
 		for (String word : client.getWordList()) {
 			out.write(word);
 			out.write(" ");
 		}
-		out.write("))\n");
+		out.write(")\n");
 		out.flush();
 	}
 
