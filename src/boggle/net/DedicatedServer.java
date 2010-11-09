@@ -28,8 +28,10 @@ public class DedicatedServer {
 						server.game.setDictionary(dictionary);
 						server.game.blacklist.load("deutsch.blk");
 						server.game.restart();
-
-						Thread.sleep(120000);
+						synchronized(server.game){
+						server.game.wait(rules.timeLimit + 10000);
+						}
+						Thread.sleep(10000);
 					} catch (InterruptedException e) {
 						break;
 					} catch(IOException e){

@@ -146,6 +146,9 @@ public class BoggleGame implements BoggleServer {
 					}
 				}
 				evaluateAllClients();
+				synchronized(BoggleGame.this){
+				BoggleGame.this.notifyAll();
+				}
 			}
 		});
 		timerThread.start();
