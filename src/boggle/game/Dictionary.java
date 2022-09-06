@@ -13,7 +13,8 @@ import java.util.HashSet;
 
 public class Dictionary {
 
-	protected HashSet<String> dictionary = new HashSet<String>();
+	private static final String WIKTIONARY = "http://de.wiktionary.org/wiki/";
+    protected HashSet<String> dictionary = new HashSet<String>();
 	private boolean wiktionaryActive = true;
 
 	public Dictionary() {
@@ -107,7 +108,7 @@ public class Dictionary {
 	protected boolean checkThroughWiki(String word) {
 		URL url = null;
 		try {
-			url = new URL("http://de.wiktionary.org/wiki/" + word);
+			url = new URL(WIKTIONARY + word);
 		} catch (MalformedURLException e) {
 			return false;
 		}

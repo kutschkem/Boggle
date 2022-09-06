@@ -1,7 +1,5 @@
 package boggle.ui;
 
-import interfaces.Observer;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +14,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import kutschke.interfaces.Observer;
 
 @SuppressWarnings("serial")
 public class BoggleInputPanel extends JPanel implements ActionListener{
