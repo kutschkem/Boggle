@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+repositories{
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+jar {
+    manifest {
+        from file('META-INF/MANIFEST.MF')
+    }
+}
+
+dependencies {
+    implementation 'com.github.kutschkem:Utilities:master-SNAPSHOT'
+    implementation 'junit:junit:4.10'
+}
